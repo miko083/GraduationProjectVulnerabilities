@@ -36,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
             editor.apply()
 
             startActivity(Intent(this@LoginActivity, InboxActivity::class.java))
-
+            //Todo check if user and password are correct
             if (emailAddressText == "Krzysztof" && passwordText == "Walaszek") {
                 Log.d("IMPORTANT", "You are administator!")
             }
