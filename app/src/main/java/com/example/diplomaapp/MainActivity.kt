@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val img = ImageView(this)
-        img.animate().alpha(4000F).setDuration(0)
+        img.animate().alpha(4000F).duration = 0
 
         Handler().postDelayed({
             val mainIntent = Intent(this@MainActivity, LoginActivity::class.java)

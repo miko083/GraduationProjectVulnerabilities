@@ -4,27 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
+    tools:context=".RegisterActivity"
     android:layout_gravity="center"
     android:layout_margin="20dp"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="180dp"
-        android:src="@drawable/blue"
-        android:layout_gravity="center"
-        />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#2894e0"
-        android:text="Walach TV"
+        android:text="Register"
         android:textStyle="bold"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
-        android:textSize="22sp"
+        android:textSize="25sp"
         />
+
     <EditText
         android:id="@+id/et-Email"
         android:textColor="#2894e0"
@@ -41,6 +37,37 @@
         android:padding="20dp"
         />
     <EditText
+        android:id="@+id/et-FirstName"
+        android:textColor="#2894e0"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="first name"
+        android:textColorHint="#2894e0"
+        android:layout_gravity="center"
+        android:drawableStart="@drawable/ic_person"
+        android:drawablePadding="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edit"
+        android:padding="20dp"
+        />
+    <EditText
+        android:id="@+id/et-LastName"
+        android:textColor="#2894e0"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="last name"
+        android:textColorHint="#2894e0"
+        android:layout_gravity="center"
+        android:drawableStart="@drawable/ic_person"
+        android:drawablePadding="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edit"
+        android:padding="20dp"
+        />
+
+    <EditText
         android:id="@+id/et-Pass"
         android:textColor="#2894e0"
         android:layout_width="300dp"
@@ -55,30 +82,26 @@
         android:background="@drawable/edit"
         android:padding="20dp"
         />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <EditText
+        android:id="@+id/et-confirmPass"
         android:textColor="#2894e0"
-        android:text="Zapomniales hasla kolezko?"
-        android:layout_gravity="right"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="20dp"
-        android:textSize="13sp"
-        />
-    <Button
-        android:id="@+id/loginButton"
         android:layout_width="300dp"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="confirm password"
+        android:textColorHint="#2894e0"
         android:layout_gravity="center"
-        android:text="Login"
-        android:textColor="#FFFFFF"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/button"
+        android:drawableStart="@drawable/ic_person"
+        android:drawablePadding="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edit"
+        android:padding="20dp"
         />
+
     <Button
         android:id="@+id/registerButton"
         android:layout_width="300dp"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:layout_gravity="center"
         android:text="Register"
         android:textColor="#FFFFFF"
