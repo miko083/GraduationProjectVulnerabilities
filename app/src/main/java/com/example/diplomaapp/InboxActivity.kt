@@ -1,6 +1,7 @@
 package com.example.diplomaapp
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
@@ -31,6 +32,7 @@ class InboxActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.settings -> Toast.makeText(this, "Selected Settings", Toast.LENGTH_SHORT).show()
             R.id.userPanel -> Toast.makeText(this, "Selected UserPanel", Toast.LENGTH_SHORT).show()
+            R.id.camera -> startActivity(Intent(this@InboxActivity, TakePhotoActivity::class.java))
         }
         return true
     }
