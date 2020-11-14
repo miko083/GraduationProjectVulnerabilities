@@ -16,3 +16,16 @@ Currently it is very early version.
  * Possibility to run on rooted devices
 
 ## Screenshots
+
+### Login Screen
+![Login Screen](https://github.com/miko083/GraduationProjectVulnerabilities/blob/master/screenshots/login.png)
+
+### Inbox Screen
+![Inbox Screen](https://github.com/miko083/GraduationProjectVulnerabilities/blob/master/screenshots/inbox.png)
+
+### Take Photo Screen
+![Take Photo Screen](https://github.com/miko083/GraduationProjectVulnerabilities/blob/master/screenshots/take_photo.png)
+
+### Received Message Screen
+![Received Message Screen](https://github.com/miko083/GraduationProjectVulnerabilities/blob/master/screenshots/received_message.png)
+
