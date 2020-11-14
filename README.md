@@ -7,3 +7,12 @@ In the future I will add to my GIT version of this app with fixed vulnerabilitie
 
 This application will be similar to Snapchat. Users will be able to share their photos with others, photos will be deleted after short amount of time.
 Currently it is very early version.
+
+## Curent vulnerabilities
+ * Unsafe Shared Preferences mechanism
+ * Unsafe Content Provider mechanism
+ * Lack of TLS
+ * Developer Backdoor, possibility to do reverse engineering
+ * Possibility to run on rooted devices
+
+## Screenshots

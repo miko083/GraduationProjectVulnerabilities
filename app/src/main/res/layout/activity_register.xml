@@ -23,12 +23,12 @@
 
     <EditText
         android:id="@+id/et-Email"
-        android:textColor="#2894e0"
+        android:textColor="@color/colorPrimary"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:hint="username"
-        android:textColorHint="#2894e0"
+        android:textColorHint="@color/colorPrimary"
         android:layout_gravity="center"
         android:drawableStart="@drawable/ic_person"
         android:drawablePadding="10dp"
@@ -36,14 +36,15 @@
         android:background="@drawable/edit"
         android:padding="20dp"
         />
+
     <EditText
         android:id="@+id/et-FirstName"
-        android:textColor="#2894e0"
+        android:textColor="@color/colorPrimary"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:inputType="text"
         android:hint="first name"
-        android:textColorHint="#2894e0"
+        android:textColorHint="@color/colorPrimary"
         android:layout_gravity="center"
         android:drawableStart="@drawable/ic_person"
         android:drawablePadding="10dp"

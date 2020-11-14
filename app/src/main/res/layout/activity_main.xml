@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2894e0"
+    android:background="#ffffff"
     android:gravity="center"
     tools:context=".MainActivity">
 
@@ -12,7 +12,7 @@
         android:id="@+id/img"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:src="@drawable/white"
+        android:src="@drawable/agh_symbol"
         android:layout_gravity="center"
     />
 
