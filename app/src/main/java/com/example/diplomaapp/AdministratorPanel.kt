@@ -1,10 +1,19 @@
 package com.example.diplomaapp
 
+import android.app.Dialog
+import android.content.ContentValues
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
@@ -12,6 +21,7 @@ import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import org.w3c.dom.Text
 
 class AdministratorPanel : AppCompatActivity() {
 
@@ -26,34 +36,25 @@ class AdministratorPanel : AppCompatActivity() {
         val messages = ArrayList<Message>()
 
         userDatabaseButton.setOnClickListener {
-            /*
-            val request = JsonObjectRequest(Request.Method.POST, url, Response.Listener { response ->
-                // Log.d("RESPONSE", response)
-                val jsonOutput = response.getJSONArray()
-                val intent = Intent(this@AdministratorPanel, InboxActivity::class.java)
-                intent.putParcelableArrayListExtra("UserDatabase",messages)
-                startActivity(intent)
-            },
-                Response.ErrorListener { error ->
-                    Log.d("ERROR", "Error!")
-                })
-
-             */
+            messages.clear()
             val request = JsonArrayRequest(Request.Method.POST, url, null, Response.Listener { response ->
                 for (i in 0 until response.length()) {
                     val username = response.getJSONObject(i).getString("Username")
-                    val firstName = response.getJSONObject(i).getString("First_Name")
-                    val lastName = response.getJSONObject(i).getString("Last_Name")
-                    messages.add(Message(R.drawable.walach, username, firstName + " " + lastName, "04/11/2020"))
+                    val firstName = response.getJSONObject(i).getString("FirstName")
+                    val lastName = response.getJSONObject(i).getString("LastName")
+                    val lastLogin = response.getJSONObject(i).getString("LastLogin")
+                    messages.add(Message(R.drawable.walach, username, firstName,lastName,lastLogin ,"",""))
                 }
 
-                // Log.d("LENGTH", jsonOutput.toString())
-                // Log.d("NUMER_ONE",response.getJSONObject(0).getString("Username"))
                 val intent = Intent(this@AdministratorPanel, InboxActivity::class.java)
-                intent.putParcelableArrayListExtra("UserDatabase",messages)
+                intent.putParcelableArrayListExtra("UserList",messages)
+                // Send values to intent
                 intent.putExtra("Title","List of users")
-                // TODO Change to Boolean
-                intent.putExtra("SendMessageIcon","false")
+                intent.putExtra("SendMessageIcon",false)
+                intent.putExtra("UserName", "")
+                intent.putExtra("PreviewMessage", false)
+                intent.putExtra("Title", "Choose User")
+                intent.putExtra("Admin",true)
                 startActivity(intent)
             },
                 Response.ErrorListener { error ->

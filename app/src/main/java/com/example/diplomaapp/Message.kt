@@ -3,7 +3,7 @@ package com.example.diplomaapp
 import android.os.Parcel
 import android.os.Parcelable
 
-class Message(private var avatar: Int, private var personName: String?, private var personMessage: String?, private var messageDate: String?): Parcelable {
+class Message(private var avatar: Int, private var personName: String?, private var firstName: String?, private var lastName: String?, private var lastLogin: String?,  private var personMessage: String?, private var messageDate: String?): Parcelable {
 
     companion object {
         @JvmField
@@ -17,7 +17,10 @@ class Message(private var avatar: Int, private var personName: String?, private 
         avatar = parcel.readInt(),
         personName = parcel.readString(),
         personMessage = parcel.readString(),
-        messageDate = parcel.readString()
+        messageDate = parcel.readString(),
+        firstName = parcel.readString(),
+        lastName = parcel.readString(),
+        lastLogin = parcel.readString()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -25,6 +28,9 @@ class Message(private var avatar: Int, private var personName: String?, private 
         parcel.writeString(personName)
         parcel.writeString(personMessage)
         parcel.writeString(messageDate)
+        parcel.writeString(firstName)
+        parcel.writeString(lastName)
+        parcel.writeString(lastLogin)
     }
 
     override fun describeContents() = 0
@@ -44,4 +50,17 @@ class Message(private var avatar: Int, private var personName: String?, private 
     fun getMessageDate(): String? {
         return messageDate
     }
+
+    fun getFirstName(): String? {
+        return firstName
+    }
+
+    fun getLastName(): String? {
+        return lastName
+    }
+
+    fun getLastLogin(): String? {
+        return lastLogin
+    }
+
 }

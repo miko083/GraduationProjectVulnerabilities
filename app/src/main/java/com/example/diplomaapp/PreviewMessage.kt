@@ -28,14 +28,16 @@ class PreviewMessage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_preview_message)
 
+        supportActionBar!!.title = "Message"
+
         mQueue = Volley.newRequestQueue(this)
         var userName = intent.getStringExtra("UserName")
         var recipient = intent.getStringExtra("Recipient")
 
-        val url = "http://192.168.0.142/get-message"
+        val url = "https://192.168.0.142/get-message"
         var photoJson: JSONObject = JSONObject()
-        photoJson.put("userName",userName)
-        photoJson.put("recipient",recipient)
+        photoJson.put("UserName",userName)
+        photoJson.put("Recipient",recipient)
 
         var photoID = ""
         var message = ""
@@ -44,9 +46,9 @@ class PreviewMessage : AppCompatActivity() {
                 Request.Method.POST, url, photoJson,
                 Response.Listener { response ->
                     try {
-                        photoID = response.getString("photo_id")
-                        message = response.getString("message")
-                        val photoURL = "http://192.168.0.142/get-photo/" + photoID;
+                        photoID = response.getString("PhotoID")
+                        message = response.getString("Message")
+                        val photoURL = "https://192.168.0.142/get-photo/" + photoID;
                         imageView = findViewById(R.id.imageView)
                         messageView = findViewById(R.id.et_Message)
                         Glide.with(this).load(photoURL).into(imageView);

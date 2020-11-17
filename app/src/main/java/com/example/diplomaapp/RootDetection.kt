@@ -7,15 +7,15 @@ import java.io.InputStreamReader
 
 class RootDetection {
         fun isDeviceRooted(): Boolean {
-            return checkRootMethod1() || checkRootMethod2() || checkRootMethod3()
+            return checkKeys() || checkBinaries() || checkXbin()
         }
 
-        private fun checkRootMethod1(): Boolean {
+        private fun checkKeys(): Boolean {
             val buildTags = Build.TAGS
             return buildTags != null && buildTags.contains("test-keys")
         }
 
-        private fun checkRootMethod2(): Boolean {
+        private fun checkBinaries(): Boolean {
             val paths = arrayOf(
                 "/system/app/Superuser.apk",
                 "/sbin/su",
@@ -34,7 +34,7 @@ class RootDetection {
             return false
         }
 
-        private fun checkRootMethod3(): Boolean {
+        private fun checkXbin(): Boolean {
             var process: Process? = null
             return try {
                 process = Runtime.getRuntime()

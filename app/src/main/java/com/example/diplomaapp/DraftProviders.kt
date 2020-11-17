@@ -9,12 +9,12 @@ import android.net.Uri
 class DraftProviders: ContentProvider() {
 
     companion object{
-        // Copy Package name
+        // PROVIDERS Details
         val PROVIDER_NAME = "com.example.diplomaapp/DraftsProviders"
         val URL = "content://$PROVIDER_NAME/DRAFT_TABLE"
         val CONTENT_URI = Uri.parse(URL)
 
-        //val _ID = "_id"
+        // VALUES FOR DATABASES
         val MESSAGE = "MESSAGE"
         val SENDER = "SENDER"
         val RECIPIENT = "RECIPIENT"

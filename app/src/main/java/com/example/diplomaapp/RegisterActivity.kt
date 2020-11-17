@@ -35,7 +35,7 @@ class RegisterActivity : AppCompatActivity() {
         var firstNameText = ""
         var lastNameText = ""
 
-        val url = "http://192.168.0.142/"
+        val url = "https://192.168.0.142/"
         mQueue = Volley.newRequestQueue(this)
 
         registerButton.setOnClickListener {
@@ -49,11 +49,11 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(this, "Wrong input!", Toast.LENGTH_SHORT).show()
             else {
                 var registerData: JSONObject = JSONObject()
-                registerData.put("inquiry","register")
-                registerData.put("username",emailAddressText)
-                registerData.put("password",passwordText)
-                registerData.put("first_name",firstNameText)
-                registerData.put("last_name",lastNameText)
+                registerData.put("Inquiry","register")
+                registerData.put("Username",emailAddressText)
+                registerData.put("Password",passwordText)
+                registerData.put("First_name",firstNameText)
+                registerData.put("Last_name",lastNameText)
 
                 // Request for JSON
                 val request =

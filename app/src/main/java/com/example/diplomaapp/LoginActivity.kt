@@ -47,7 +47,9 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         val rootCheck = RootDetection().isDeviceRooted()
-        Log.d("TEST_ROOT",rootCheck.toString())
+        if (rootCheck)
+            Toast.makeText(this, "DANGEROUS! Device Rooted! ", Toast.LENGTH_SHORT).show()
+
         val emailAddress = findViewById<EditText>(R.id.et_Email)
         val password = findViewById<EditText>(R.id.et_Pass)
         val loginButton = findViewById<Button>(R.id.loginButton)
@@ -57,25 +59,24 @@ class LoginActivity : AppCompatActivity() {
         var passwordText = ""
 
         val sharedPref = getPreferences(Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
 
-        val emailAddressFromSharedPref = sharedPref.getString("user", null)
-        val passwordFromSharedPref = sharedPref.getString("password",null)
+        /////////////////////////////
+        // UNSERCURE OLD SOLTUTION //
+        /////////////////////////////
+        // val editor = sharedPref.edit()
+        // val emailAddressFromSharedPref = sharedPref.getString("user", null)
+        // val passwordFromSharedPref = sharedPref.getString("password",null)
 
-        // Log.d("EMAIL_SHARED_PREF", emailAddressFromSharedPref)
-        // Log.d("PASSWORD_SHARED_PREF", passwordFromSharedPref)
-
-
-        ////////////////////////
-        // Testing encryption //
-        ////////////////////////
+        //////////////////////
+        // SECURED SOLUTION //
+        //////////////////////
 
         val key = "secret_key";
         val encryptedPreferences = EncryptedPreferences.Builder(this).withEncryptionPassword(key).build();
-        // val editor = encryptedPreferences.edit();
+        val editor = encryptedPreferences.edit();
 
-        // val emailAddressFromSharedPref = encryptedPreferences.getString("user", null);
-        // val passwordFromSharedPref = encryptedPreferences.getString("password", null);
+        val emailAddressFromSharedPref = encryptedPreferences.getString("user", null);
+        val passwordFromSharedPref = encryptedPreferences.getString("password", null);
 
         ////////////////////
         // Read variables //
@@ -97,24 +98,14 @@ class LoginActivity : AppCompatActivity() {
             password.setText(passwordText)
         }
 
-        /////////////////////////////////////////////
-        // TODO More advanced using Android KeyGen //
-        /////////////////////////////////////////////
 
-        // val encryptedString = null;
-        // val keyGenerator: KeyGenerator;
-        // var TRANSFORMATION = "AES/GCM/NoPadding"
-        // var encryption
-
-
-        val url = "http://192.168.0.142/login"
-        mQueue = Volley.newRequestQueue(this)
+        val url = "https://192.168.0.142/login"
 
         ////////////////////////
         // Secured with HTTPS //
         ////////////////////////
 
-        // mQueue = Volley.newRequestQueue(this, HurlStack(null, getSocketFactory()))
+        mQueue = Volley.newRequestQueue(this, HurlStack(null, getSocketFactory()))
 
         loginButton.setOnClickListener {
             emailAddressText = emailAddress.text.toString()
@@ -127,14 +118,10 @@ class LoginActivity : AppCompatActivity() {
             // Check if email and password have correct length. If correct, build JSON to send.
             if (emailAddressText.isEmpty() || passwordText.isEmpty())
                 Toast.makeText(this, "Wrong username or password input!", Toast.LENGTH_SHORT).show()
-            else if (emailAddressText == "Admin" && passwordText == "Admin") {
-                Log.d("IMPORTANT", "You are administator!")
-                startActivity(Intent(this@LoginActivity, AdministratorPanel::class.java))
-            }
             else {
                 var loginData: JSONObject = JSONObject()
-                loginData.put("username",emailAddressText)
-                loginData.put("password",passwordText)
+                loginData.put("UserName",emailAddressText)
+                loginData.put("Password",passwordText)
 
                 // Request for JSON
                 val request =
@@ -142,22 +129,25 @@ class LoginActivity : AppCompatActivity() {
                         Request.Method.POST, url, loginData,
                         Response.Listener { response ->
                             try {
-                                val jsonOutput = response.getString("status")
+                                val jsonOutput = response.getString("Status")
                                 Log.d("VOLLEY",jsonOutput)
                                 if (jsonOutput == "Passed.") {
                                     val intent = Intent(this@LoginActivity, InboxActivity::class.java)
                                     val messages = ArrayList<Message>()
-                                    val messagesFromJSON = response.getJSONArray("messages")
+                                    val messagesFromJSON = response.getJSONArray("Messages")
                                     for (i in 0 until messagesFromJSON.length()) {
                                         val personJSON = messagesFromJSON.getJSONObject(i)
-                                        val userName = personJSON.getString("User_name")
+                                        val userName = personJSON.getString("UserName")
                                         val message = personJSON.getString("Message")
-                                        messages.add(Message(R.drawable.walach, userName, message, "04/11/2020"))
+                                        val messageDate = personJSON.getString("MessageDate")
+                                        messages.add(Message(R.drawable.walach, userName, message,"","",message,messageDate))
                                     }
                                     intent.putParcelableArrayListExtra("UserList",messages)
-                                    intent.putExtra("SendMessageIcon","true")
+                                    intent.putExtra("SendMessageIcon",true)
                                     intent.putExtra("UserName", emailAddressText)
-                                    intent.putExtra("PreviewMessage", "true")
+                                    intent.putExtra("PreviewMessage", true)
+                                    intent.putExtra("Title", "")
+                                    intent.putExtra("Admin", false)
                                     startActivity(intent)
                                 }
                                 else
@@ -212,6 +202,7 @@ class LoginActivity : AppCompatActivity() {
         return errorMsg
     }
 
+    // Insert HTTP Certificate
     private fun getSocketFactory(): SSLSocketFactory? {
         var cf: CertificateFactory? = null
         try {

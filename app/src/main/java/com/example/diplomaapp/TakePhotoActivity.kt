@@ -5,15 +5,16 @@
 package com.example.diplomaapp
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.MediaStore.Images
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.Response
@@ -21,15 +22,17 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 import java.io.IOException
+
 
 class TakePhotoActivity : AppCompatActivity() {
     // Set variables
     // Lateinit to avoid null check
     private lateinit var imageView: ImageView
     private var imageData: ByteArray? = null
-    private val postURL: String = "http://192.168.0.142/send-image"
-    private val postMessageURL : String = "http://192.168.0.142/send-message"
+    private val postURL: String = "https://192.168.0.142/send-image"
+    private val postMessageURL : String = "https://192.168.0.142/send-message"
 
     // IMAGE_PICK_CODE to open gallery
     private val IMAGE_PICK_CODE = 999
@@ -99,10 +102,10 @@ class TakePhotoActivity : AppCompatActivity() {
         }
 
         var messageData: JSONObject = JSONObject()
-        messageData.put("sender",sender)
-        messageData.put("recipient",recipient)
-        messageData.put("message",message)
-        messageData.put("imageName",imageName)
+        messageData.put("Sender",sender)
+        messageData.put("Recipient",recipient)
+        messageData.put("Message",message)
+        messageData.put("ImageName",imageName)
 
         val requestMessage =
             JsonObjectRequest(
@@ -119,7 +122,6 @@ class TakePhotoActivity : AppCompatActivity() {
                 }, Response.ErrorListener { error -> error.printStackTrace() })
 
         // Add to the Queue
-
         Volley.newRequestQueue(this).add(request)
         Volley.newRequestQueue(this).add(requestMessage)
     }
@@ -141,25 +143,36 @@ class TakePhotoActivity : AppCompatActivity() {
                         val uri = data?.data
                         if (uri != null) {
                             imageView.setImageURI(uri)
+                            Log.d("URI..",uri.toString())
                             createImageData(uri)
                         }
                     }
                 }
                 CAMERA_REQUEST_CODE -> {
                     if (data != null) {
-                        imageView.setImageBitmap(data.extras  ?.get("data") as Bitmap)
+                        val extras = data.extras
+                        val imageBitmap = extras!!["data"] as Bitmap?
+                        imageView.setImageBitmap(imageBitmap)
+
+                        // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+                        val uri: Uri? = imageBitmap?.let { getImageUri(applicationContext, it) }
+                        Log.d("URI..", uri.toString())
+                        if (uri != null) {
+                            createImageData(uri)
+                        }
                     }
                 }
             }
         }
-        //if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE) {
-        //    val uri = data?.data
-        //    if (uri != null) {
-        //        imageView.setImageURI(uri)
-        //        createImageData(uri)
-        //    }
-        //}
 
+    }
+
+    fun getImageUri(inContext: Context, inImage: Bitmap): Uri {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path =
+            Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null)
+        return Uri.parse(path)
     }
 
     fun getRandomString(length: Int): String {
