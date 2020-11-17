@@ -39,7 +39,7 @@ class AdministratorPanel : AppCompatActivity() {
             messages.clear()
             val request = JsonArrayRequest(Request.Method.POST, url, null, Response.Listener { response ->
                 for (i in 0 until response.length()) {
-                    val username = response.getJSONObject(i).getString("Username")
+                    val username = response.getJSONObject(i).getString("UserName")
                     val firstName = response.getJSONObject(i).getString("FirstName")
                     val lastName = response.getJSONObject(i).getString("LastName")
                     val lastLogin = response.getJSONObject(i).getString("LastLogin")

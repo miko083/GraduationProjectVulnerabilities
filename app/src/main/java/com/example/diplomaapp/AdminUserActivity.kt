@@ -45,7 +45,7 @@ class AdminUserActivity : AppCompatActivity() {
                     Request.Method.POST, url, userToDelete,
                     Response.Listener { response ->
                         try {
-                            val jsonOutput = response.getString("status")
+                            val jsonOutput = response.getString("Status")
                             if (jsonOutput == "Passed.")
                                 Toast.makeText(this, "Success.", Toast.LENGTH_SHORT).show()
                             else

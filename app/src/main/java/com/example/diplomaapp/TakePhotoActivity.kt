@@ -112,7 +112,7 @@ class TakePhotoActivity : AppCompatActivity() {
                 Request.Method.POST, postMessageURL, messageData,
                 Response.Listener { response ->
                     try {
-                        val jsonOutput = response.getString("status")
+                        val jsonOutput = response.getString("Status")
                         if (jsonOutput == "Passed.")
                             Log.d("PHOTO STATUS:", "SUCCESS")
                     } catch (e: JSONException) {
