@@ -6,6 +6,9 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
+import android.util.Base64
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -35,6 +38,10 @@ import java.security.cert.Certificate
 import java.security.cert.CertificateException
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
+import javax.crypto.Cipher
+import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
+import javax.crypto.spec.GCMParameterSpec
 import javax.net.ssl.*
 
 
@@ -60,44 +67,70 @@ class LoginActivity : AppCompatActivity() {
 
         val sharedPref = getPreferences(Context.MODE_PRIVATE)
 
-        /////////////////////////////
-        // UNSERCURE OLD SOLTUTION //
-        /////////////////////////////
-        // val editor = sharedPref.edit()
-        // val emailAddressFromSharedPref = sharedPref.getString("user", null)
-        // val passwordFromSharedPref = sharedPref.getString("password",null)
+        val TRANSFORMATION = "AES/GCM/NoPadding"
 
-        //////////////////////
-        // SECURED SOLUTION //
-        //////////////////////
+        ////////////////////////
+        // SERCURED SOLTUTION //
+        ///////////////////////
 
-        val key = "secret_key";
-        val encryptedPreferences = EncryptedPreferences.Builder(this).withEncryptionPassword(key).build();
-        val editor = encryptedPreferences.edit();
+        val editorEncryptionData = sharedPref.edit()
+        var unencryptedString : String? = null
+        if (sharedPref.getString("rh93hrsah83d",null) != null && sharedPref.getString("dah412D8dj*&dhsadi",null) != null) {
+            var keyStore : KeyStore = KeyStore.getInstance("AndroidKeyStore")
+            keyStore.load(null)
+            var secretKeyEntry : KeyStore.SecretKeyEntry = keyStore.getEntry("sample_alice",null) as KeyStore.SecretKeyEntry
+            val secretKeyDecrypt : SecretKey = secretKeyEntry.secretKey
+            val cipherDecrypt : Cipher = Cipher.getInstance(TRANSFORMATION)
+            val spec : GCMParameterSpec = GCMParameterSpec(128, Base64.decode(sharedPref.getString("rh93hrsah83d",null),Base64.DEFAULT))
+            cipherDecrypt.init(Cipher.DECRYPT_MODE, secretKeyDecrypt,spec)
+            val decodedData : ByteArray = cipherDecrypt.doFinal(Base64.decode(sharedPref.getString("dah412D8dj*&dhsadi",null),Base64.DEFAULT))
+            unencryptedString = String(decodedData)
+        }
 
-        val emailAddressFromSharedPref = encryptedPreferences.getString("user", null);
-        val passwordFromSharedPref = encryptedPreferences.getString("password", null);
+        var emailAddressFromSharedPref = ""
+        var passwordFromSharedPref = ""
+        if (unencryptedString != null) {
+            var encryptedPreferences = EncryptedPreferences.Builder(this).withEncryptionPassword(unencryptedString).build();
+            emailAddressFromSharedPref = encryptedPreferences.getString("user", "");
+            passwordFromSharedPref = encryptedPreferences.getString("password", "");
+        }
+        
+        val secretString = getRandomString(16)
+        val iv: ByteArray
+        val encryption: ByteArray
+        val keyGenerator : KeyGenerator =
+            KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
+        val keyGenParameterSpec: KeyGenParameterSpec =
+            KeyGenParameterSpec.Builder("sample_alice", KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
+                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE).build()
+        keyGenerator.init(keyGenParameterSpec)
+        val secretKey: SecretKey = keyGenerator.generateKey()
+        val cipher: Cipher = Cipher.getInstance(TRANSFORMATION)
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey)
+        iv = cipher.iv
+        editorEncryptionData.putString("rh93hrsah83d",Base64.encodeToString(iv,Base64.DEFAULT)).apply()
+        encryption = cipher.doFinal(secretString.toByteArray())
+        editorEncryptionData.putString("dah412D8dj*&dhsadi", Base64.encodeToString(encryption,Base64.DEFAULT)).apply()
+
+        if (emailAddressFromSharedPref != null && passwordFromSharedPref != null) {
+            Log.d("EMAIL", emailAddressFromSharedPref)
+            Log.d("PASS", passwordFromSharedPref)
+        }
 
         ////////////////////
         // Read variables //
         ////////////////////
 
-        if (emailAddressFromSharedPref != null && passwordFromSharedPref != null) {
-            Log.d("EMAIL_SHARED_PREF", emailAddressFromSharedPref)
-            Log.d("PASSWORD_SHARED_PREF", passwordFromSharedPref)
-        }
-
-        // Read from Shared Pref
-        if (emailAddressFromSharedPref != null) {
+        if (emailAddressFromSharedPref != "") {
             emailAddressText = emailAddressFromSharedPref
             emailAddress.setText(emailAddressText)
         }
 
-        if (passwordFromSharedPref != null) {
+        if (passwordFromSharedPref != "") {
             passwordText = passwordFromSharedPref
             password.setText(passwordText)
         }
-
 
         val url = "https://192.168.0.142/login"
 
@@ -112,6 +145,9 @@ class LoginActivity : AppCompatActivity() {
             passwordText = password.text.toString()
             // Put into SharedPref for future use - use adb to pull it out from device. Clear first.
             // editor.clear().commit()
+            var encryptedPreferences = EncryptedPreferences.Builder(this).withEncryptionPassword(secretString).build()
+            var editor = encryptedPreferences.edit();
+            editor.clear()
             editor.putString("user", emailAddressText).putString("password",passwordText).apply()
             // Using encrypted shared pref
 
@@ -248,6 +284,11 @@ class LoginActivity : AppCompatActivity() {
             e.printStackTrace()
         }
         return null
+    }
+
+    fun getRandomString(length: Int): String {
+        val charset = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+        return List(length) { charset.random() }.joinToString("")
     }
 
 

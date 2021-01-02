@@ -56,13 +56,15 @@ class TakePhotoActivity : AppCompatActivity() {
         recipient = intent.getStringExtra("Recipient")
         message = intent.getStringExtra("Message")
 
+        supportActionBar!!.title = "Photo selection"
+
 
         val imageButton = findViewById<Button>(R.id.imageButton)
         imageButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
+            val callGalleryIntent = Intent(Intent.ACTION_PICK)
             // Set intent type to open gallery.
-            intent.type = "image/*"
-            startActivityForResult(intent, IMAGE_PICK_CODE)
+            callGalleryIntent.type = "image/*"
+            startActivityForResult(callGalleryIntent, IMAGE_PICK_CODE)
         }
         val sendButton = findViewById<Button>(R.id.sendButton)
         sendButton.setOnClickListener {
