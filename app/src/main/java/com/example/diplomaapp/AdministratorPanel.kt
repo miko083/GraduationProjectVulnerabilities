@@ -29,7 +29,7 @@ class AdministratorPanel : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_administrator_panel)
-        val url = "http://192.168.0.142/get-users"
+        val url = "https://192.168.0.142/get-users"
         mQueue = Volley.newRequestQueue(this)
         val userDatabaseButton = findViewById<Button>(R.id.userDatabase)
 

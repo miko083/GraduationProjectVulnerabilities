@@ -76,9 +76,9 @@ class LoginActivity : AppCompatActivity() {
         val editorEncryptionData = sharedPref.edit()
         var unencryptedString : String? = null
         if (sharedPref.getString("rh93hrsah83d",null) != null && sharedPref.getString("dah412D8dj*&dhsadi",null) != null) {
-            var keyStore : KeyStore = KeyStore.getInstance("AndroidKeyStore")
+            val keyStore : KeyStore = KeyStore.getInstance("AndroidKeyStore")
             keyStore.load(null)
-            var secretKeyEntry : KeyStore.SecretKeyEntry = keyStore.getEntry("sample_alice",null) as KeyStore.SecretKeyEntry
+            val secretKeyEntry : KeyStore.SecretKeyEntry = keyStore.getEntry("sample_alice",null) as KeyStore.SecretKeyEntry
             val secretKeyDecrypt : SecretKey = secretKeyEntry.secretKey
             val cipherDecrypt : Cipher = Cipher.getInstance(TRANSFORMATION)
             val spec : GCMParameterSpec = GCMParameterSpec(128, Base64.decode(sharedPref.getString("rh93hrsah83d",null),Base64.DEFAULT))
@@ -90,7 +90,7 @@ class LoginActivity : AppCompatActivity() {
         var emailAddressFromSharedPref = ""
         var passwordFromSharedPref = ""
         if (unencryptedString != null) {
-            var encryptedPreferences = EncryptedPreferences.Builder(this).withEncryptionPassword(unencryptedString).build();
+            val encryptedPreferences = EncryptedPreferences.Builder(this).withEncryptionPassword(unencryptedString).build();
             emailAddressFromSharedPref = encryptedPreferences.getString("user", "");
             passwordFromSharedPref = encryptedPreferences.getString("password", "");
         }
@@ -112,11 +112,6 @@ class LoginActivity : AppCompatActivity() {
         editorEncryptionData.putString("rh93hrsah83d",Base64.encodeToString(iv,Base64.DEFAULT)).apply()
         encryption = cipher.doFinal(secretString.toByteArray())
         editorEncryptionData.putString("dah412D8dj*&dhsadi", Base64.encodeToString(encryption,Base64.DEFAULT)).apply()
-
-        if (emailAddressFromSharedPref != null && passwordFromSharedPref != null) {
-            Log.d("EMAIL", emailAddressFromSharedPref)
-            Log.d("PASS", passwordFromSharedPref)
-        }
 
         ////////////////////
         // Read variables //
@@ -145,8 +140,8 @@ class LoginActivity : AppCompatActivity() {
             passwordText = password.text.toString()
             // Put into SharedPref for future use - use adb to pull it out from device. Clear first.
             // editor.clear().commit()
-            var encryptedPreferences = EncryptedPreferences.Builder(this).withEncryptionPassword(secretString).build()
-            var editor = encryptedPreferences.edit();
+            val encryptedPreferences = EncryptedPreferences.Builder(this).withEncryptionPassword(secretString).build()
+            val editor = encryptedPreferences.edit();
             editor.clear()
             editor.putString("user", emailAddressText).putString("password",passwordText).apply()
             // Using encrypted shared pref
